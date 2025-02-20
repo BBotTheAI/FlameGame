@@ -1,0 +1,17 @@
+name: spacegame
+description: space Flame game
+version: 0.0.0
+publish_to: none
+
+environment:
+  sdk: ^3.0.0
+  flutter: ^3.13.0
+
+dependencies:
+  flutter:
+    sdk: flutter
+  flame: ^1.23.0
+
+flutter:
+  assets:
+    - assets/images/
