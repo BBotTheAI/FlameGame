@@ -12,17 +12,19 @@ import '../battle_game.dart';
 class Bullet extends SpriteComponent with HasGameReference<BattleGame>, CollisionCallbacks{
   Bullet({
     required super.position, required this.direction, this.shooterIsPlayer = true
-  })  :super(anchor: Anchor.center, size: Vector2.all(40));
+  })  :super(anchor: Anchor.center);
 
   Vector2 direction;
-  double bulletSpeed = 15;
-  double enemyBulletSpeed = 8;
+  double bulletSpeed = 1200;
+  double enemyBulletSpeed = 500;
   int bulletDamage = 20;
   bool shooterIsPlayer;
 
   @override
   Future<void> onLoad() async {
     await super.onLoad();
+
+    size = Vector2.all(game.calculateSizeDouble(40));
 
     final bulletImage = game.images.fromCache('bullet.png');
     sprite = Sprite(bulletImage);    
@@ -39,9 +41,9 @@ class Bullet extends SpriteComponent with HasGameReference<BattleGame>, Collisio
 
   @override
   void update(double dt) {
-    
-    if(shooterIsPlayer) position += direction * bulletSpeed;
-    else position += direction * enemyBulletSpeed;
+    super.update(dt);
+    if(shooterIsPlayer) position += direction * bulletSpeed * dt;
+    else position += direction * enemyBulletSpeed * dt;
 
     if (shooterIsPlayer && (position.distanceTo(game.getPlayerPosition()) > 1000)) removeFromParent();
    

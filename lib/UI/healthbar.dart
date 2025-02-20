@@ -1,11 +1,13 @@
+import 'dart:async';
 import 'dart:ui';
 
 import 'package:flame/components.dart';
 
-class Healthbar extends RectangleComponent {
+import '../battle_game.dart';
+
+class Healthbar extends RectangleComponent with HasGameReference<BattleGame>{
   Healthbar({required super.position})  
     :super(
-      size: Vector2(50, 5),
       anchor: Anchor.bottomLeft,
       paint: Paint()
         ..color = Color.fromARGB(255, 255, 255, 255)
@@ -14,7 +16,12 @@ class Healthbar extends RectangleComponent {
 
   Color color = Color.fromARGB(255, 255, 255, 255);
 
-
+  @override
+  FutureOr<void> onLoad() {
+    double newSize = game.calculateSizeDouble(50);
+    size = Vector2(newSize, newSize/10);
+    
+  }
  
 
 

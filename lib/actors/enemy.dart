@@ -12,7 +12,6 @@ class Enemy extends SpriteAnimationComponent with HasGameReference<BattleGame>, 
   Enemy({
     super.position,
   }) : super(
-          size: Vector2.all(50),
           anchor: Anchor.center,
         );
 
@@ -27,6 +26,8 @@ class Enemy extends SpriteAnimationComponent with HasGameReference<BattleGame>, 
   @override
   Future<void> onLoad() async {
     await super.onLoad();
+
+    size = Vector2.all(game.calculateSizeDouble(50));
 
     animation = await game.loadSpriteAnimation(
       'enemy.png',

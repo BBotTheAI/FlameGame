@@ -51,6 +51,8 @@ class MoveButton extends PositionComponent with TapCallbacks, HasGameReference<B
 
   }
 
+  
+
   Path getTrianglePath(Vector2 origin, double x, double y) {
     return Path()
       ..moveTo(origin.x, origin.y + y)

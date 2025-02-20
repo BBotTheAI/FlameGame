@@ -8,7 +8,6 @@ class Explosion extends SpriteAnimationComponent with HasGameReference<BattleGam
   Explosion({
     required super.position,
   }) : super(
-          size: Vector2.all(150),
           anchor: Anchor.center,
           removeOnFinish: true,
         );
@@ -18,6 +17,8 @@ class Explosion extends SpriteAnimationComponent with HasGameReference<BattleGam
   @override
   Future<void> onLoad() async {
     await super.onLoad();
+
+    size = Vector2.all(game.calculateSizeDouble(150));
 
 
     animation = await game.loadSpriteAnimation(

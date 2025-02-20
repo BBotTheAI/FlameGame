@@ -28,7 +28,7 @@ class EnemyManager extends PositionComponent with HasGameReference<BattleGame> {
     if (random.nextBool() == true) spawnDirection = 1;
     else spawnDirection = -1;
 
-    game.world.add(Enemy(position: game.makePosition(750 * spawnDirection , random.nextDouble()*250 + 500)));    
+    game.world.add(Enemy(position: game.makePosition((game.size.x/2) * spawnDirection , random.nextDouble()*game.size.y/4 + game.size.y*2/3)));    
     enemyCount++;
   }
 

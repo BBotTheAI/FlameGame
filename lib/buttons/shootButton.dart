@@ -11,12 +11,14 @@ import '../battle_game.dart';
 
 class Shootbutton extends PositionComponent {
   Shootbutton({
-    required super.position,
-  })  : super(anchor: Anchor.bottomRight, size: Vector2.all(256));
+    required super.size,
+  })  : super(anchor: Anchor.center);
 
   final _paint = Paint()..color = const Color(0x448BA8FF);
   late DragButton button;
   
+  
+
   @override
   FutureOr<void> onLoad() {
     
@@ -29,7 +31,7 @@ class Shootbutton extends PositionComponent {
   
   @override
   void render(Canvas canvas) {
-    canvas.drawCircle(Offset(128, 128), 125.0, _paint);
+    canvas.drawCircle(Offset(size.x/2, size.y/2), size.x/2, _paint);
     
 
     super.render(canvas);
@@ -53,17 +55,23 @@ class DragButton extends PositionComponent with DragCallbacks, HasGameReference<
     required super.position, required this.parentSize,
   })  : super(anchor: Anchor.center, size: Vector2.all(parentSize.x / 2));
 
-    final _paint = Paint()..color = const Color.fromRGBO(255, 255, 255, 1);
-    Vector2 parentSize;
-    final countdown = Timer(0.25);
-    bool isShooting = false;
-    Vector2 shootingDirection = Vector2.zero();
-    
+  final _paint = Paint()..color = const Color.fromRGBO(255, 255, 255, 1);
+  Vector2 parentSize;
+  final countdown = Timer(0.25);
+  bool isShooting = false;
+  Vector2 shootingDirection = Vector2.zero();
+  
+  late double radiusOfCircle;
+
+  @override
+  FutureOr<void> onLoad() {
+    radiusOfCircle = size.x/4;
+  }
 
 
   @override
   void render(Canvas canvas) {
-    canvas.drawCircle(Offset(size.x/2, size.y/2), 32, _paint);    
+    canvas.drawCircle(Offset(size.x/2, size.y/2), radiusOfCircle, _paint);    
   }
 
   @override
@@ -72,7 +80,7 @@ class DragButton extends PositionComponent with DragCallbacks, HasGameReference<
 
     position = (position + event.localDelta);
 
-    if (sqrt(pow((position.x - size.x), 2) + pow((position.y - size.y), 2)) >= 125) {
+    if (sqrt(pow((position.x - size.x), 2) + pow((position.y - size.y), 2)) >= parentSize.x/2) {
       position = (position - event.localDelta);
     }
 

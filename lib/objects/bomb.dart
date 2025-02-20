@@ -9,7 +9,7 @@ import '../effects/explosion.dart';
 class Bomb extends SpriteAnimationComponent with HasGameReference<BattleGame>, CollisionCallbacks{
   Bomb({
     required super.position,
-  }) : super(size: Vector2(25, 50), anchor: Anchor.center);
+  }) : super(anchor: Anchor.center);
 
   final Vector2 velocity = Vector2.zero();
   final double gravity = 2.5;
@@ -22,6 +22,9 @@ class Bomb extends SpriteAnimationComponent with HasGameReference<BattleGame>, C
   @override
   Future<void> onLoad() async {
     await super.onLoad();
+
+    double newSize = game.calculateSizeDouble(25);
+    size = Vector2(newSize, newSize*2);
 
     animation = await game.loadSpriteAnimation(
       'bomb.png',

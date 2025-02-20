@@ -25,7 +25,7 @@ class SkyManager extends PositionComponent with HasGameReference<BattleGame>{
   Future<void> makeItRain(int delaySecond) async {
     while(true) {
       
-      game.world.add(new Bomb(position: game.makePosition(random.nextInt(900) - 450, (game.getPlayerPosition().y * -1) + 1000)));
+      game.world.add(new Bomb(position: game.makePosition(random.nextInt(game.size.x.toInt()) - game.size.x.toInt()/2, (game.getPlayerPosition().y * -1) + 1000)));
       
   
       await Future.delayed(Duration(seconds: delaySecond)); 

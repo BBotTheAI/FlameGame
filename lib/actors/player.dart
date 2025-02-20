@@ -11,7 +11,7 @@ class Player extends SpriteAnimationComponent
     with HasGameReference<BattleGame>, KeyboardHandler, CollisionCallbacks{
   Player({
     required super.position,
-  }) : super(size: Vector2.all(64), anchor: Anchor.center);
+  }) : super(anchor: Anchor.center);
 
   int horizontalDirection = 0;
   bool hasJumped = false;
@@ -29,6 +29,9 @@ class Player extends SpriteAnimationComponent
   @override
   Future<void> onLoad() async {
     
+    size = Vector2.all(game.calculateSizeDouble(64));
+
+
     animation = SpriteAnimation.fromFrameData(
       game.images.fromCache('character.png'),
       SpriteAnimationData.sequenced(
@@ -43,6 +46,14 @@ class Player extends SpriteAnimationComponent
     );
 
   }
+
+
+
+
+
+
+
+
   
   @override
   bool onKeyEvent(KeyEvent event, Set<LogicalKeyboardKey> keysPressed) {
@@ -95,6 +106,7 @@ class Player extends SpriteAnimationComponent
     } else if (horizontalDirection > 0 && scale.x < 0) {
       flipHorizontally();
     }
+
     super.update(dt);
 
   }

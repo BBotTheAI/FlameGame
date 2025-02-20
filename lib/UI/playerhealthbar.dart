@@ -3,9 +3,8 @@ import 'dart:ui';
 import 'package:flame/components.dart';
 
 class Playerhealthbar extends RectangleComponent {
-  Playerhealthbar({required super.position})  
+  Playerhealthbar({required super.position, required super.size})  
     :super(
-      size: Vector2(50, 200),
       anchor: Anchor.center,
       paint: Paint()
         ..color = Color.fromRGBO(0, 0, 0, 100)
@@ -26,7 +25,7 @@ class Playerhealthbar extends RectangleComponent {
 
     for(int i = (size.y - (size.x/2)).toInt(); i > 0; i-= (size.y/4).toInt()) {
       recList.add(new RectangleComponent(
-        size: Vector2.all(size.x),
+        size: Vector2(size.x, size.y/4),
         position: Vector2(size.x/2, i.toDouble()),
         anchor: Anchor.center,
         paint: Paint()

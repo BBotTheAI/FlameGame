@@ -6,31 +6,38 @@ import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flutter/material.dart';
 import 'package:spacegame/UI/playerhealthbar.dart';
-import 'package:spacegame/buttons/movebutton.dart';
-import 'package:spacegame/buttons/shootButton.dart';
+import 'package:spacegame/actors/enemy.dart';
+import 'package:spacegame/buttons/buttoncontainer.dart';
+import 'package:spacegame/effects/explosion.dart';
+import 'package:spacegame/objects/bomb.dart';
+import 'package:spacegame/objects/bullet.dart';
 
 import 'actors/player.dart';
 import 'managers/enemymanager.dart';
 import 'managers/skymanager.dart';
 import 'objects/ground.dart';
 
-class BattleGame extends FlameGame with HasKeyboardHandlerComponents, HasCollisionDetection {
+
+
+class BattleGame extends FlameGame with HasKeyboardHandlerComponents, HasCollisionDetection, TapDetector {
   BattleGame();
 
   var random = Random();
   late Player _player;
   late SkyManager _skyManager;
-  late EnemyManager _enemyManager;
-  late Shootbutton _shootButton;
+  late EnemyManager _enemyManager;  
   late Playerhealthbar _playerhealthbar;
-  late MoveButton _rightbutton;
-  late MoveButton _leftbutton;
-  late MoveButton _jumpbutton;
+  late Buttoncontainer _buttoncontainer;
   double objectSpeed = 0;
 
   final double gravity = 15;
 
   int moveDirection = 0;
+
+  double defaultGameSizeY = 736;
+  double defaultGameSizeX = 1536;
+
+
 
   @override
   Future<void> onLoad() async {
@@ -45,11 +52,9 @@ class BattleGame extends FlameGame with HasKeyboardHandlerComponents, HasCollisi
       'ground.png',
     ]);
 
-    
   
     camera.viewfinder.anchor = Anchor.bottomCenter;
    
-    
 
     makeTempGround();
 
@@ -62,6 +67,7 @@ class BattleGame extends FlameGame with HasKeyboardHandlerComponents, HasCollisi
 
   void startGame() {
 
+
     _player = Player(position: (makePosition(0, 200)));
     world.add(_player);    
    
@@ -70,29 +76,16 @@ class BattleGame extends FlameGame with HasKeyboardHandlerComponents, HasCollisi
 
     _enemyManager = EnemyManager(position: Vector2(0, 0));
     world.add(_enemyManager);
-
-    _shootButton = Shootbutton(position: Vector2(canvasSize.x / 2 - 50 , -50));
-    world.add(_shootButton);
     
-    _playerhealthbar = Playerhealthbar(position: Vector2(-canvasSize.x*3/8, -canvasSize.y / 2));
-    world.add(_playerhealthbar);    
+    _playerhealthbar = Playerhealthbar(position: Vector2(-size.x*3/8, -size.y * 2 / 3), size: Vector2(size.x/30, size.y/3));
+    world.add(_playerhealthbar);   
 
-    Vector2 buttonSizes = Vector2.all(128);
-    int padding = 50;
+    _buttoncontainer = Buttoncontainer(position: Vector2(0, -size.y/20), size: Vector2(size.x, size.y/3)); 
+    world.add(_buttoncontainer);
 
-    _leftbutton = MoveButton(position: Vector2(-size.x/2 + buttonSizes.x/2 + padding, -110), size: buttonSizes);
-    _leftbutton.direction = -1;
-    _leftbutton.rotateAngle = _leftbutton.degree90 * 2;
-    world.add(_leftbutton);
+    
 
-    _rightbutton = MoveButton(position: Vector2(_leftbutton.position.x + buttonSizes.x + padding, -110), size: buttonSizes);
-    _rightbutton.direction = 1;
-    world.add(_rightbutton);
-
-    _jumpbutton = MoveButton(position: Vector2(_leftbutton.position.x + buttonSizes.x/2 + padding/2, -230), size: buttonSizes);
-    _jumpbutton.direction = 2;
-    _jumpbutton.rotateAngle = _jumpbutton.degree90 * 3;
-    world.add(_jumpbutton);
+    
     
   }
 
@@ -132,6 +125,14 @@ class BattleGame extends FlameGame with HasKeyboardHandlerComponents, HasCollisi
     _playerhealthbar.updateBar(_player.getHealth());
     
   }
+
+ double calculateSizeDouble(double defaultSize) {
+  return (size.x * defaultSize) / defaultGameSizeX;
+ }
+
+
+
+
  
 
 
