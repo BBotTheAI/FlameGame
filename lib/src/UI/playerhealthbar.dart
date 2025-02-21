@@ -17,6 +17,7 @@ class Playerhealthbar extends RectangleComponent {
   bool firstRemoved = false;
   bool secondRemoved = false;
   bool thirdRemoved = false;
+  bool fourthRemoved = false;
 
   @override
   void onLoad() {
@@ -70,7 +71,7 @@ class Playerhealthbar extends RectangleComponent {
       updateColors(Color.fromARGB(255, 237, 130, 0));
 
     }
-    else {
+    else if (health > 0){
 
       if(!thirdRemoved) {
         remove(recList.last);
@@ -79,6 +80,16 @@ class Playerhealthbar extends RectangleComponent {
       }
 
       updateColors(Color.fromARGB(255, 237, 0, 0));
+    }
+    else {
+
+      if(!fourthRemoved) {
+        remove(recList.last);
+        recList.removeLast();
+        fourthRemoved = true;
+      }
+
+
     }
     
   }

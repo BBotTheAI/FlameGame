@@ -3,7 +3,8 @@ import 'dart:async';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 
-import '../battle_game.dart';
+import '../../battle_game.dart';
+
 
 class Ground extends SpriteComponent with HasGameReference<BattleGame>{
   

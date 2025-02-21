@@ -2,9 +2,10 @@ import 'dart:async';
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
+import 'package:flame/effects.dart';
 import 'package:flutter/src/services/hardware_keyboard.dart';
 
-import '../battle_game.dart';
+import '../../battle_game.dart';
 import '../objects/ground.dart';
 
 class Player extends SpriteAnimationComponent 
@@ -107,6 +108,17 @@ class Player extends SpriteAnimationComponent
       flipHorizontally();
     }
 
+    if(position.y > game.size.y * 2 ) {
+      add(RemoveEffect(
+        delay: 0.35,
+        onComplete: () {                                   
+          game.playState = PlayState.gameOver;
+        }));
+
+    }
+
+
+
     super.update(dt);
 
   }
@@ -137,8 +149,34 @@ class Player extends SpriteAnimationComponent
         // collision normal by separation distance.
         position += collisionNormal.scaled(separationDistance);
       }
+
+      
+    }
+    
+  }
+
+
+
+  @override
+  void onCollisionEnd(PositionComponent other) {
+    super.onCollisionEnd(other);
+
+    if(health <= 0) {
+      add(RemoveEffect(
+            delay: 0.35,
+            onComplete: () {                                   
+              game.playState = PlayState.gameOver;
+            }));       
     }
   }
+
+
+
+
+
+
+
+
 
  
   void getHit(int damage) {

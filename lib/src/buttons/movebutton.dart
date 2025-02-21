@@ -4,7 +4,7 @@ import 'dart:ui';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 
-import '../battle_game.dart';
+import '../../battle_game.dart';
 
 class MoveButton extends PositionComponent with TapCallbacks, HasGameReference<BattleGame>{
   MoveButton({
@@ -27,13 +27,19 @@ class MoveButton extends PositionComponent with TapCallbacks, HasGameReference<B
 
   @override
   void onTapDown(TapDownEvent event) {
-    game.moveDirection = direction;    
+    game.moveDirection = direction;   
   }
 
   @override
-  void onTapUp(TapUpEvent event) {    
+  void onTapUp( event) {
     game.moveDirection = 0;
   }
+
+  @override
+  void onTapCancel(TapCancelEvent event) {
+    game.moveDirection = 0;
+  }
+
 
 
   @override

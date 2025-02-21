@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
 
-import '../battle_game.dart';
+import '../../battle_game.dart';
 import '../effects/explosion.dart';
 
 class Bomb extends SpriteAnimationComponent with HasGameReference<BattleGame>, CollisionCallbacks{

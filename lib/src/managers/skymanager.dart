@@ -3,7 +3,7 @@ import 'dart:math';
 
 import 'package:flame/components.dart';
 
-import '../battle_game.dart';
+import '../../battle_game.dart';
 import '../objects/bomb.dart';
 
 class SkyManager extends PositionComponent with HasGameReference<BattleGame>{

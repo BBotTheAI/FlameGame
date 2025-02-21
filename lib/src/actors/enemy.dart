@@ -2,10 +2,10 @@ import 'dart:async';
 import 'dart:math';
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:spacegame/effects/explosion.dart';
-import 'package:spacegame/UI/healthbar.dart';
+import 'package:spacegame/src/effects/explosion.dart';
+import 'package:spacegame/src/UI/healthbar.dart';
 
-import '../battle_game.dart';
+import '../../battle_game.dart';
 import '../objects/bullet.dart';
 
 class Enemy extends SpriteAnimationComponent with HasGameReference<BattleGame>, CollisionCallbacks {

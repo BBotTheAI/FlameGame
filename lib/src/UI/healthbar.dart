@@ -3,7 +3,7 @@ import 'dart:ui';
 
 import 'package:flame/components.dart';
 
-import '../battle_game.dart';
+import '../../battle_game.dart';
 
 class Healthbar extends RectangleComponent with HasGameReference<BattleGame>{
   Healthbar({required super.position})  

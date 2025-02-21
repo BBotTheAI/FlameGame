@@ -1,8 +1,8 @@
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:spacegame/actors/player.dart';
+import 'package:spacegame/src/actors/player.dart';
 
-import '../battle_game.dart';
+import '../../battle_game.dart';
 
 class Explosion extends SpriteAnimationComponent with HasGameReference<BattleGame>, CollisionCallbacks{
   Explosion({

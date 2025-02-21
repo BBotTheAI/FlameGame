@@ -2,9 +2,9 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:flame/components.dart';
-import 'package:spacegame/actors/enemy.dart';
+import 'package:spacegame/src/actors/enemy.dart';
 
-import '../battle_game.dart';
+import '../../battle_game.dart';
 
 class EnemyManager extends PositionComponent with HasGameReference<BattleGame> {
   EnemyManager({
@@ -13,6 +13,8 @@ class EnemyManager extends PositionComponent with HasGameReference<BattleGame> {
 
   var random = Random();
 
+
+  int totalEnemies = 15;
   int maxEnemies = 6;
   int enemyCount = 0;
 
@@ -21,6 +23,7 @@ class EnemyManager extends PositionComponent with HasGameReference<BattleGame> {
     spawner();
   }
 
+  
 
 
   void spawnEnemy() {    
@@ -33,6 +36,16 @@ class EnemyManager extends PositionComponent with HasGameReference<BattleGame> {
   }
 
   Future<void> spawner() async {
+
+    if(totalEnemies <= maxEnemies) {
+      maxEnemies = totalEnemies;
+    }
+
+    if (totalEnemies <= 0) {
+      game.playState = PlayState.won;
+    }
+
+
     while (enemyCount < maxEnemies) {
       spawnEnemy();
       await Future.delayed(Duration(seconds: 1 + random.nextInt(2)));

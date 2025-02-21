@@ -5,9 +5,9 @@ import 'dart:math';
 import 'package:flame/components.dart';
 import 'package:flame/events.dart';
 import 'package:flutter/material.dart';
-import 'package:spacegame/objects/bullet.dart';
+import 'package:spacegame/src/objects/bullet.dart';
 
-import '../battle_game.dart';
+import '../../battle_game.dart';
 
 class Shootbutton extends PositionComponent {
   Shootbutton({
@@ -77,16 +77,19 @@ class DragButton extends PositionComponent with DragCallbacks, HasGameReference<
   @override
   void onDragUpdate(DragUpdateEvent event) {
     super.onDragUpdate(event);
+    if(game.playState == PlayState.playing){
+      position = (position + event.localDelta);
 
-    position = (position + event.localDelta);
+      if (sqrt(pow((position.x - size.x), 2) + pow((position.y - size.y), 2)) >= parentSize.x/2) {
+        position = (position - event.localDelta);
+      }
 
-    if (sqrt(pow((position.x - size.x), 2) + pow((position.y - size.y), 2)) >= parentSize.x/2) {
-      position = (position - event.localDelta);
+
+      shootingDirection += event.localDelta;
+      isShooting = true;
+
     }
-
-
-    shootingDirection += event.localDelta;
-    isShooting = true;
+   
 
     
 

@@ -2,7 +2,7 @@ import 'dart:async';
 
 import 'package:flame/components.dart';
 
-import '../battle_game.dart';
+import '../../battle_game.dart';
 import 'movebutton.dart';
 import 'shootButton.dart';
 
@@ -23,20 +23,20 @@ class Buttoncontainer extends PositionComponent with HasGameReference<BattleGame
     
     Vector2 buttonSizes = Vector2.all(size.y/2);
     double padding = buttonSizes.x;
-    double edgePadding = padding/2;
+    double edgePadding = padding/4;
 
 
     
-    _leftbutton = MoveButton(position: Vector2(buttonSizes.x/2 + edgePadding, size.y*2/3), size: buttonSizes);
+    _leftbutton = MoveButton(position: Vector2(buttonSizes.x/2 + 10, size.y*2/3 + edgePadding), size: buttonSizes);
     _leftbutton.direction = -1;
     _leftbutton.rotateAngle = _leftbutton.degree90 * 2;
     add(_leftbutton);
 
-    _rightbutton = MoveButton(position: Vector2(_leftbutton.position.x + buttonSizes.x + padding, size.y*2/3), size: buttonSizes);
+    _rightbutton = MoveButton(position: Vector2(_leftbutton.position.x + buttonSizes.x + padding, size.y*2/3 + edgePadding), size: buttonSizes);
     _rightbutton.direction = 1;
     add(_rightbutton);
 
-    _jumpbutton = MoveButton(position: Vector2(_leftbutton.position.x + buttonSizes.x/2 + padding/2, size.y/3), size: buttonSizes);
+    _jumpbutton = MoveButton(position: Vector2(_leftbutton.position.x + buttonSizes.x/2 + padding/2, size.y/3 + edgePadding), size: buttonSizes);
     _jumpbutton.direction = 2;
     _jumpbutton.rotateAngle = _jumpbutton.degree90 * 3;
     add(_jumpbutton);
@@ -47,16 +47,13 @@ class Buttoncontainer extends PositionComponent with HasGameReference<BattleGame
     
   }
 
-  @override
-  void onGameResize(Vector2 size) {
-    super.onGameResize(size);
+
+  void disableButtons() {
+    remove(_shootButton);
+    remove(_jumpbutton);
+    remove(_rightbutton);
+    remove(_leftbutton);
   }
-
-
-
-
-
-
 
   
 }

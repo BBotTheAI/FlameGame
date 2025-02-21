@@ -11,6 +11,8 @@ dependencies:
   flutter:
     sdk: flutter
   flame: ^1.23.0
+  google_fonts: ^6.2.1
+  flutter_animate: ^4.5.2
 
 flutter:
   assets:

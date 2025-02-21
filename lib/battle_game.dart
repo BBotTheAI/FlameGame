@@ -5,19 +5,22 @@ import 'package:flame/components.dart';
 import 'package:flame/game.dart';
 import 'package:flame/input.dart';
 import 'package:flutter/material.dart';
-import 'package:spacegame/UI/playerhealthbar.dart';
-import 'package:spacegame/actors/enemy.dart';
-import 'package:spacegame/buttons/buttoncontainer.dart';
-import 'package:spacegame/effects/explosion.dart';
-import 'package:spacegame/objects/bomb.dart';
-import 'package:spacegame/objects/bullet.dart';
+import 'package:spacegame/src/UI/enemynumtext.dart';
+import 'package:spacegame/src/UI/playerhealthbar.dart';
+import 'package:spacegame/src/actors/enemy.dart';
+import 'package:spacegame/src/buttons/buttoncontainer.dart';
+import 'package:spacegame/src/effects/explosion.dart';
+import 'package:spacegame/src/objects/bomb.dart';
+import 'package:spacegame/src/objects/bullet.dart';
 
-import 'actors/player.dart';
-import 'managers/enemymanager.dart';
-import 'managers/skymanager.dart';
-import 'objects/ground.dart';
+import 'src/actors/player.dart';
+import 'src/managers/enemymanager.dart';
+import 'src/managers/skymanager.dart';
+import 'src/objects/ground.dart';
+import 'src/objects/play_area.dart';
 
 
+enum PlayState { welcome, playing, gameOver, won }
 
 class BattleGame extends FlameGame with HasKeyboardHandlerComponents, HasCollisionDetection, TapDetector {
   BattleGame();
@@ -28,14 +31,34 @@ class BattleGame extends FlameGame with HasKeyboardHandlerComponents, HasCollisi
   late EnemyManager _enemyManager;  
   late Playerhealthbar _playerhealthbar;
   late Buttoncontainer _buttoncontainer;
+  late Enemynumtext _enemynumtext;
   double objectSpeed = 0;
 
   final double gravity = 15;
 
   int moveDirection = 0;
 
+  bool disabledOnce = false;
+
   double defaultGameSizeY = 736;
   double defaultGameSizeX = 1536;
+ 
+
+  late PlayState _playState;                                    
+  PlayState get playState => _playState;
+  set playState(PlayState playState) {
+    _playState = playState;
+    switch (playState) {
+      case PlayState.welcome:
+      case PlayState.gameOver:
+      case PlayState.won:
+        overlays.add(playState.name);
+      case PlayState.playing:
+        overlays.remove(PlayState.welcome.name);
+        overlays.remove(PlayState.gameOver.name);
+        overlays.remove(PlayState.won.name);
+    }
+  }
 
 
 
@@ -43,6 +66,7 @@ class BattleGame extends FlameGame with HasKeyboardHandlerComponents, HasCollisi
   Future<void> onLoad() async {
     
     super.onLoad();
+
     await images.loadAll([
       'character.png',
       'bomb.png',
@@ -56,9 +80,9 @@ class BattleGame extends FlameGame with HasKeyboardHandlerComponents, HasCollisi
     camera.viewfinder.anchor = Anchor.bottomCenter;
    
 
-    makeTempGround();
-
-    startGame();
+    
+    
+    playState = PlayState.welcome; 
     
 
   }
@@ -66,9 +90,29 @@ class BattleGame extends FlameGame with HasKeyboardHandlerComponents, HasCollisi
 
 
   void startGame() {
+    if (playState == PlayState.playing) return;
 
+    world.removeAll(world.children.query<Player>());
+    world.removeAll(world.children.query<Enemy>());
+    world.removeAll(world.children.query<Bullet>());
+    world.removeAll(world.children.query<Bomb>());
+    world.removeAll(world.children.query<SkyManager>());
+    world.removeAll(world.children.query<EnemyManager>());
+    world.removeAll(world.children.query<Playerhealthbar>());
+    world.removeAll(world.children.query<Buttoncontainer>());
+    world.removeAll(world.children.query<Ground>());
+    world.removeAll(world.children.query<Explosion>());
+    world.removeAll(world.children.query<Enemynumtext>());
 
-    _player = Player(position: (makePosition(0, 200)));
+    playState = PlayState.playing;
+
+    disabledOnce = false;
+
+    world.add(Ground(Vector2(0, -300)));
+
+    makeTempGround();
+
+    _player = Player(position: (makePosition(0, 600)));
     world.add(_player);    
    
     _skyManager = SkyManager(position: Vector2(0, 0));
@@ -83,11 +127,20 @@ class BattleGame extends FlameGame with HasKeyboardHandlerComponents, HasCollisi
     _buttoncontainer = Buttoncontainer(position: Vector2(0, -size.y/20), size: Vector2(size.x, size.y/3)); 
     world.add(_buttoncontainer);
 
+    _enemynumtext = Enemynumtext(position: Vector2(-size.x/2, -size.y));
+    world.add(_enemynumtext);
+
     
 
     
     
   }
+
+  @override                                                     
+  void onTap() {
+    super.onTap();
+    startGame();
+  }    
 
   
 
@@ -99,13 +152,13 @@ class BattleGame extends FlameGame with HasKeyboardHandlerComponents, HasCollisi
 
 
 
-  Vector2 makePosition(x, y) {
+  Vector2 makePosition(double x, double y) {
     return Vector2(x, -y);
   }
 
   void makeTempGround() {
-    for(int i = -450; i <= 450; i += 50) {
-      world.add(Ground(makePosition(i, 0)));
+    for(int i = (-size.x/2).toInt(); i <= (size.x/2).toInt(); i += 50) {
+      world.add(Ground(makePosition(i.toDouble(), 0)));
     }
   }
 
@@ -115,14 +168,27 @@ class BattleGame extends FlameGame with HasKeyboardHandlerComponents, HasCollisi
 
   void enemyDied() {
     _enemyManager.enemyCount--;
+    _enemyManager.totalEnemies--;
     _enemyManager.spawner();
   }
+
+
+  
 
   @override
   void update(double dt) {
     super.update(dt);
 
-    _playerhealthbar.updateBar(_player.getHealth());
+    if(playState == PlayState.playing) {
+      _playerhealthbar.updateBar(_player.getHealth());
+      _enemynumtext.text = "Enemies remaining: " + _enemyManager.totalEnemies.toString();
+    }
+
+    if((playState == PlayState.gameOver || playState == PlayState.won) && !disabledOnce) {
+      _buttoncontainer.disableButtons();
+      disabledOnce = true;
+    }
+    
     
   }
 
@@ -132,8 +198,6 @@ class BattleGame extends FlameGame with HasKeyboardHandlerComponents, HasCollisi
 
 
 
-
- 
 
 
 }

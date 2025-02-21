@@ -3,11 +3,11 @@ import 'dart:math' as math;
 
 import 'package:flame/collisions.dart';
 import 'package:flame/components.dart';
-import 'package:spacegame/actors/enemy.dart';
-import 'package:spacegame/actors/player.dart';
-import 'package:spacegame/effects/explosion.dart';
+import 'package:spacegame/src/actors/enemy.dart';
+import 'package:spacegame/src/actors/player.dart';
+import 'package:spacegame/src/effects/explosion.dart';
 
-import '../battle_game.dart';
+import '../../battle_game.dart';
 
 class Bullet extends SpriteComponent with HasGameReference<BattleGame>, CollisionCallbacks{
   Bullet({
