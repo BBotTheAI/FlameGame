@@ -17,7 +17,6 @@ import 'src/actors/player.dart';
 import 'src/managers/enemymanager.dart';
 import 'src/managers/skymanager.dart';
 import 'src/objects/ground.dart';
-import 'src/objects/play_area.dart';
 
 
 enum PlayState { welcome, playing, gameOver, won }
